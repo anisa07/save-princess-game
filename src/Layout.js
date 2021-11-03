@@ -10,13 +10,14 @@ export class Layout {
     load() {
         if (this.status !== 'init') return;
         this.assets.forEach((l, i) => {
-            const layerName = 'tiles' + i;
+            const layerName = 'layer' + i;
             this.game.load.image(layerName, l.path);
             this.layers.push({name: layerName, layer: {}});
         });
         this.game.load.tilemapTiledJSON(this.tilemap.name, this.tilemap.path);
         this.status = 'loaded';
     }
+
     create() {
         if (this.status !== 'loaded') return;
         this.game.map = this.game.make.tilemap({key: this.tilemap.name});
@@ -32,6 +33,7 @@ export class Layout {
         this.game.physics.world.setBounds( 0, 0, this.game.map.widthInPixels, this.game.map.heightInPixels);
         this.status = 'created';
     }
+    
     collide(actors) {
         this.layers.forEach((l) => {
             this.game.physics.add.collider(actors, l.layer);

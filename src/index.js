@@ -1,11 +1,11 @@
 import Phaser from 'phaser';
 import EvilMashroom from './EvilMashroom';
 import Player from './Player';
-import GameObjects from './GameObjects';
 import { GameOver } from './GameOver'
 import { Background } from './Background'
 import { LevelMap } from './LevelMap'
 import { Layout } from './Layout'
+import { CommonResources } from './CommonResources'
 import {playerProps} from './PlayerProps';
 
 // export const globalGameObjects = {
@@ -17,6 +17,7 @@ class InitGame extends Phaser.Scene {
     constructor ()
     {
         super({ "key": "InitGame", active: 3 });
+        const resources = new CommonResources(this);
         const background = new Background(this, '../src/assets/SET1_bakcground_night1.png');
         this.layout = new Layout(this, 
           {name: 'map0', path: '../src/assets/initMap0.json'}, 
@@ -24,9 +25,8 @@ class InitGame extends Phaser.Scene {
             {name: 'items', layer: 'initLayer1', path: '../src/assets/items.png'},
             {name: 'hyptosis_til-art-batch-2', layer: 'initLayer2', path: '../src/assets/hyptosis_til-art-batch-2.png'}
         ]);
-        const resources = [ this.layout ]; //, tileset,, enemies, player];
-        this.levelMap = new LevelMap(resources);
-        this.gameObjects = new GameObjects(this)
+        const allResources = [ resources, background, this.layout ]; //, tileset,, enemies, player];
+        this.levelMap = new LevelMap(allResources);
         // this.enemies = {}
         // this.player = {}
     }
@@ -37,20 +37,6 @@ class InitGame extends Phaser.Scene {
 
     preload () {
         this.levelMap.load();
-        
-
-        // this.load.image('diamond1', '../src/assets/diamond_big_01.png');
-        // this.load.image('diamond2', '../src/assets/diamond_big_02.png');
-        // this.load.image('diamond3', '../src/assets/diamond_big_03.png');
-        // this.load.image('diamond4', '../src/assets/diamond_big_04.png');
-        // this.load.image('diamond5', '../src/assets/diamond_big_05.png');
-        // this.load.image('diamond6', '../src/assets/diamond_big_06.png');
-
-        // this.load.spritesheet("eyeMonster", "../src/assets/eye_monster_idle7.png", { frameWidth: 150, frameHeight: 128} );
-        // this.load.spritesheet('evilMashroom', "../src/assets/evil_mashroom.png", { frameWidth: 60, frameHeight: 65})
-        // this.load.spritesheet('evilMashroomDie', "../src/assets/evil_mashroom_die.png", { frameWidth: 50, frameHeight: 50})
-        
-        this.gameObjects.preload();
     }
       
     create () {
@@ -59,8 +45,6 @@ class InitGame extends Phaser.Scene {
         // this.backgroundLayer2.setCollisionByProperty({type: ['obstacle']});
         // console.log(this)
         // console.log(this.map)
-
-        this.gameObjects.create();
 
         this.playerObject = new Player(this);
         this.playerObject.create(30, 450);
