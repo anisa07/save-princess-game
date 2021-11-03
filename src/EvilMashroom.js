@@ -45,9 +45,7 @@ class EvilMashroom extends Enemy {
             // enemy.setOffset(0, -10);
             enemy.setSize(30, 40)
         }
-    
-        this.game.physics.add.collider(this.enemies, this.game.backgroundLayer1);
-        this.game.physics.add.collider(this.enemies, this.game.backgroundLayer2);
+        this.game.layout.collide(this.enemies);
     }
 
     create() {

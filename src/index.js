@@ -3,6 +3,9 @@ import EvilMashroom from './EvilMashroom';
 import Player from './Player';
 import GameObjects from './GameObjects';
 import { GameOver } from './GameOver'
+import { Background } from './Background'
+import { LevelMap } from './LevelMap'
+import { Layout } from './Layout'
 import {playerProps} from './PlayerProps';
 
 // export const globalGameObjects = {
@@ -14,9 +17,15 @@ class InitGame extends Phaser.Scene {
     constructor ()
     {
         super({ "key": "InitGame", active: 3 });
-
-        this.backgroundLayer1 = {}
-        this.backgroundLayer2 = {}
+        const background = new Background(this, '../src/assets/SET1_bakcground_night1.png');
+        this.layout = new Layout(this, 
+          {name: 'map0', path: '../src/assets/initMap0.json'}, 
+          [
+            {name: 'items', layer: 'initLayer1', path: '../src/assets/items.png'},
+            {name: 'hyptosis_til-art-batch-2', layer: 'initLayer2', path: '../src/assets/hyptosis_til-art-batch-2.png'}
+        ]);
+        const resources = [ this.layout ]; //, tileset,, enemies, player];
+        this.levelMap = new LevelMap(resources);
         this.gameObjects = new GameObjects(this)
         // this.enemies = {}
         // this.player = {}
@@ -27,6 +36,9 @@ class InitGame extends Phaser.Scene {
     }
 
     preload () {
+        this.levelMap.load();
+        
+
         // this.load.image('diamond1', '../src/assets/diamond_big_01.png');
         // this.load.image('diamond2', '../src/assets/diamond_big_02.png');
         // this.load.image('diamond3', '../src/assets/diamond_big_03.png');
@@ -38,39 +50,15 @@ class InitGame extends Phaser.Scene {
         // this.load.spritesheet('evilMashroom', "../src/assets/evil_mashroom.png", { frameWidth: 60, frameHeight: 65})
         // this.load.spritesheet('evilMashroomDie', "../src/assets/evil_mashroom_die.png", { frameWidth: 50, frameHeight: 50})
         
-        this.load.image('pic1', '../src/assets/SET1_bakcground_night1.png');
-        this.load.image('tiles1', '../src/assets/items.png');
-        this.load.image('tiles2', '../src/assets/hyptosis_til-art-batch-2.png');
-        this.load.tilemapTiledJSON('map0', '../src/assets/initMap0.json');
         this.gameObjects.preload();
     }
       
-    create ()
-    {
-        // this.map = this.add.tilemap('map0');
-        this.map = this.make.tilemap({key: 'map0'});
-        const tileset1 = this.map.addTilesetImage('items', 'tiles1');
-        const tileset2 = this.map.addTilesetImage('hyptosis_til-art-batch-2', 'tiles2');
-        
-        // let pic1 = this.add.image(0, 0, "pic1");
-        let image = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'pic1');
-        let scaleX = this.cameras.main.width / image.width;
-        let scaleY = this.cameras.main.height / image.height;
-        let scale = Math.max(scaleX, scaleY);
-        image.setScale(scale).setScrollFactor(0);
-
-        this.backgroundLayer1 = this.map.createLayer('initLayer1', tileset1, 0, 0);
-        this.backgroundLayer2 = this.map.createLayer('initLayer2', tileset2, 0, 0);
-      
-        //this.backgroundLayer.setCollisionBetween(0, 300);
-        // this.backgroundLayer1.setCollisionBetween(0, 300);
-        this.map.setCollisionByProperty({collides: true}, true, true, 'initLayer1');
-        this.map.setCollisionByProperty({collides: true}, true, true, 'initLayer2');
+    create () {
+        this.levelMap.create();
 
         // this.backgroundLayer2.setCollisionByProperty({type: ['obstacle']});
         // console.log(this)
         // console.log(this.map)
-        this.physics.world.setBounds( 0, 0, this.map.widthInPixels, this.map.heightInPixels);
 
         this.gameObjects.create();
 
@@ -199,13 +187,13 @@ class InitGame extends Phaser.Scene {
     // }
 }
 
-const level0 = new InitGame();
+const initGame = new InitGame();
 const gameOver = new GameOver();
 
 const config = {
     type: Phaser.AUTO,
     parent: 'phaser-example',
-    scene: [level0, gameOver],
+    scene: [initGame, gameOver],
     physics: {
         default: "arcade",
         arcade: {
