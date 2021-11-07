@@ -9,37 +9,12 @@ import {CommonResources} from './CommonResources'
 import {playerProps} from './PlayerProps';
 import {updateLives, updateHP, updateScore} from './gameInfo';
 
-// export const globalGameObjects = {
-//     player: {},
-
-// }
-
 class InitGame extends Phaser.Scene {
     constructor() {
         super({"key": "InitGame", active: 3});
 
         this.resources = new CommonResources(this);
         this.background = new Background(this, '../src/assets/SET1_bakcground_night1.png');
-        // const resources = new CommonResources(this);
-        // const background = new Background(this, '../src/assets/SET1_bakcground_night1.png');
-        // this.layout = new Layout(this,
-        //     {name: 'map0', path: '../src/assets/initMap0.json'},
-        //     [
-        //         {name: 'items', layer: 'initLayer1', path: '../src/assets/items.png'},
-        //         {
-        //             name: 'hyptosis_til-art-batch-2',
-        //             layer: 'initLayer2',
-        //             path: '../src/assets/hyptosis_til-art-batch-2.png'
-        //         }
-        //     ]);
-        // const allResources = [resources, background, this.layout]; //, tileset,, enemies, player];
-        // this.levelMap = new LevelMap(allResources);
-        // this.enemies = {}
-        // this.player = {}
-    }
-
-    initialize() {
-        //Phaser.Scene.call(this, { "key": "InitGame" });
     }
 
     preload() {
@@ -61,10 +36,6 @@ class InitGame extends Phaser.Scene {
     create() {
         this.levelMap.create();
 
-        // this.backgroundLayer2.setCollisionByProperty({type: ['obstacle']});
-        // console.log(this)
-        // console.log(this.map)
-
         playerProps.hp = 100;
         updateHP(playerProps.hp);
         this.playerObject = new Player(this);
@@ -72,73 +43,6 @@ class InitGame extends Phaser.Scene {
 
         this.enemy = new Enemy(this);
         this.enemy.create(['mushrooms'])
-
-
-        // this.enemies = new EvilMushroom(this);
-
-        // console.log(this.player)
-
-        // console.log(this.map.getTileAtWorldXY(10, 32*16+16, false, null, 'backgroundLayer1'))
-
-
-        // this.game.scale.resize(this.map.widthInPixels, this.map.heightInPixels);
-        // this.scale.setGameSize(this.map.widthInPixels, this.map.heightInPixels).getParentBounds();
-        // this.scene.setGameSize(this.map.widthInPixels, this.map.heightInPixels)
-        // this.anims.create({
-        //     key: 'diamond',
-        //     frames: [
-        //         { key: 'diamond1' },
-        //         { key: 'diamond2' },
-        //         { key: 'diamond3' },
-        //         { key: 'diamond4' },
-        //         { key: 'diamond5' },
-        //         { key: 'diamond6' }
-        //     ],
-        //     frameRate: 10,
-        //     repeat: -1
-        // });
-
-        // this.add.sprite(32, 32, 'diamond1').play('diamond');
-
-        // this.add.sprite(128, 128, 'heart1').play('heart');
-
-
-        // this.eyeMonster = this.physics.add.sprite(100, 70, "eyeMonster")
-
-        // this.anims.create({
-        //     key: "eye_Monster",
-        //     frames: this.anims.generateFrameNumbers("eyeMonster"),
-        //     frameRate: 8,
-        //     repeat: -1
-        // })
-
-        // this.eyeMonster.setScale(0.08, 0.08)
-        // this.eyeMonster.play("eye_Monster")
-        // this.eyeMonster.setCollideWorldBounds(true);
-        // this.eyeMonster.body.setAllowGravity(false);
-
-        // this.eyeMonster.setInteractive();
-        // console.log(this.map)
-
-        // this.cursorKeys = this.input.keyboard.createCursorKeys()
-
-        // this.eyeMonster.setBounce(0);
-
-        // this.eyeMonster.setCollideWorldBounds(true);
-
-        // this.setPlayer(30, 32)
-
-        // this.enemies = new Enemy(this) 
-
-        //   this.time.addEvent({
-        //     delay: 3000,
-        //     loop: false,
-        //     callback: () => {
-        //         this.scene.start("GameOver");
-        //     }
-        // });
-
-        // this.scene.start("GameOver");
     }
 
     update() {
@@ -147,10 +51,6 @@ class InitGame extends Phaser.Scene {
         updateHP(playerProps.hp);
         updateLives(playerProps.lives);
         updateScore(playerProps.score);
-        // this.scene.restart()
-        // console.log(this.map.getTileAtWorldXY(this.player.player.x, this.player.player.y+32, false, null, 'backgroundLayer1'))
-
-        //  this.movePlayerManager();\
 
         !playerProps.playerIsDead() && this.enemy.update();
 
@@ -160,41 +60,6 @@ class InitGame extends Phaser.Scene {
             this.scene.restart()
         }
     }
-
-    // movePlayerManager() {
-    //     if (this.cursorKeys.left.isDown) {
-    //         this.eyeMonster.setVelocityX(-100);
-    //         if (this.eyeMonster.flipX) {
-    //             this.eyeMonster.flipX = false;
-    //         }
-    //     } else if (this.cursorKeys.right.isDown) {
-    //         this.eyeMonster.setVelocityX(100);
-    //         this.eyeMonster.flipX = true;
-    //     } else {
-    //         // If no keys are pressed, the player keeps still
-    //         this.eyeMonster.setVelocityX(0);
-    //         // Only show the idle animation if the player is footed
-    //         // If this is not included, the player would look idle while jumping
-    //         // if (this.player.body.onFloor()) {
-    //         //   this.player.play('idle', true);
-    //         // }
-    //     }
-
-
-    //     if (this.cursorKeys.up.isDown) {
-    //         this.eyeMonster.setVelocityY(-100);
-    //     } else if (this.cursorKeys.down.isDown) {
-    //         this.eyeMonster.setVelocityY(100);
-    //     } else {
-    //         // If no keys are pressed, the player keeps still
-    //         this.eyeMonster.setVelocityY(0);
-    //         // Only show the idle animation if the player is footed
-    //         // If this is not included, the player would look idle while jumping
-    //         // if (this.player.body.onFloor()) {
-    //         //   this.player.play('idle', true);
-    //         // }
-    //     }
-    // }
 }
 
 const initGame = new InitGame();
@@ -241,4 +106,4 @@ window.sizeChanged = () => {
 
 window.onresize = () => window.sizeChanged();
 window.game = new Phaser.Game(config);
-// window.myGame = newGame;
+
