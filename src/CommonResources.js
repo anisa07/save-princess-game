@@ -25,8 +25,8 @@ export class CommonResources {
         this.game.load.spritesheet('playerDeath', "../src/assets/PlayerDeath.png", { frameWidth: 45, frameHeight: 45})
         this.game.load.spritesheet('playerGetHit', "../src/assets/PlayerGetHit.png", { frameWidth: 45, frameHeight: 45})
 
-        this.game.load.spritesheet('evilMashroom', "../src/assets/evil_mashroom.png", { frameWidth: 60, frameHeight: 65})
-        this.game.load.spritesheet('evilMashroomDie', "../src/assets/evil_mashroom_die.png", { frameWidth: 50, frameHeight: 50})
+        this.game.load.spritesheet('evilMushroom', "../src/assets/evil_mashroom.png", { frameWidth: 60, frameHeight: 65})
+        this.game.load.spritesheet('evilMushroomDie', "../src/assets/evil_mashroom_die.png", { frameWidth: 50, frameHeight: 50})
     }
     create() {
         this.game.anims.create({
@@ -108,14 +108,14 @@ export class CommonResources {
     
         this.game.anims.create({
             key: "evil_mashroom",
-            frames: this.game.anims.generateFrameNumbers("evilMashroom"),
+            frames: this.game.anims.generateFrameNumbers("evilMushroom"),
             frameRate: 13,
             repeat: -1
         });
     
         this.game.anims.create({
             key: "evil_mashroom_die",
-            frames: this.game.anims.generateFrameNumbers("evilMashroomDie"),
+            frames: this.game.anims.generateFrameNumbers("evilMushroomDie"),
             frameRate: 20,
             repeat: 1
         });

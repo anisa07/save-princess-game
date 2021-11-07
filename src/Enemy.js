@@ -1,58 +1,48 @@
-import {updateLifes,updateScore} from './gameInfo';
-import {playerProps} from './PlayerProps';
+import EvilMushroom from "./EvilMushroom";
+import {getLevelTiledLayerNames} from "./entityPositionHelper";
 
-class Enemy {
+export default class Enemy {
     constructor(game) {
         this.game = game;
         this.enemies = this.game.physics.add.group();
         this.enemies.enableBody = true;
-        this.collider = this.game.physics.add.collider(this.game.playerObject.player, this.enemies, this.fight, null, this);
-
-        // const enemiesObjects = this.scene.map.getObjectLayer('mashrooms').objects;
-
-        // for (const enemy of enemiesObjects) {
-        //     this.enemies.create(enemy.x, enemy.y - enemy.height, 'evilMashroom')
-        //         .setScale(1)
-        //         // .setOrigin(1)
-        //         // .setBounce(0.1)
-        //         // .setDepth(-1)
-        //         // .setCollideWorldBounds(true);
-
-        //     // console.log(enemy)    
-        //     // const tileRight = this.scene.map.getTileAtWorldXY(enemy.x, enemy.y, true, null, this.scene.backgroundLayer1);
-        //     // const tileRight2 = this.scene.map.getTileAt(enemy.x, enemy.y, true, null, this.scene.backgroundLayer1);
-        //     // console.log(tileRight)
-        //     // console.log(tileRight2)
-        //     // console.log(enemy)
-        //     // if(tileRight) {
-        //     //     tileRight.alpha = 0.1
-        //     // }
-        //     // if (tileRight2) {}
-
-        // }
-
-        // for (const enemy of this.enemies.children.entries) {
-        //     enemy.setPushable(false);
-        //     enemy.direction = 'LEFT';
-        //     enemy.isDead = false;
-        //     // enemy.setDepth(-1)
-        //     // enemy.setBounce(.7);
-        //     enemy.setOrigin(0)
-        //     // enemy.setSizeToFrame(32, 32)
-        //     // enemy.setOffset(0, -10);
-        //     enemy.setSize(30, 45)
-        // }
-    
-        // this.scene.physics.add.collider(this.enemies, this.scene.backgroundLayer1);
-        // this.scene.physics.add.collider(this.enemies, this.scene.backgroundLayer2);
     }
+
+    create(enemyLayers) {
+        this.enemiesData = [];
+
+        enemyLayers.forEach(l => {
+            switch (l) {
+                case 'mushrooms':
+                    this.enemiesData.push({
+                        enemyType: new EvilMushroom(this.game),
+                        enemyPic: 'evilMushroom',
+                        enemyObjects: this.game.map.getObjectLayer('mushrooms').objects || []
+                    });
+                    break;
+            }
+        });
+
+
+        enemyLayers.forEach((l, index) => {
+            const {enemyObjects, enemyType, enemyPic} = this.enemiesData[index];
+            for (const enemy of enemyObjects) {
+                this.enemies.create(enemy.x, enemy.y - enemy.height, enemyPic);
+            }
+            enemyType.create()
+        })
+
+        this.game.layout.collide(this.enemies);
+    }
+
+        // this.collider = this.game.physics.add.collider(this.game.playerObject.player, this.enemies, this.fight, null, this);
 
     fight() {}
 
     // fight() {
         // const enemyIsDead = this.isDead();
         // if (!enemyIsDead) {
-        //     playerProps.setDead = true; 
+        //     playerProps.setDead = true;
         //     // this.scene.playerObject.player.setSize(30, 45)
         //     this.scene.playerObject.player.play('player_get_hit', true);
         //     this.scene.playerObject.player.play('player_death', true);
@@ -74,7 +64,7 @@ class Enemy {
             //     enemy.play('evil_mashroom_die', true);
             //     enemy.on('animationcomplete', () => enemy.destroy());
        // }
-        
+
         // if (this.scene.playerObject.player.anims.currentAnim.key === "player_idle" ) {
         //     this.isDead();
         // }
@@ -90,10 +80,10 @@ class Enemy {
         // // PHEW
         // if (this.scene.player.sprite.body.touching.down) {
         //     this.die();
-    
+
         //     return;
         // }
-    
+
         // // Otherwise, it's game over
     // }
 
@@ -105,7 +95,7 @@ class Enemy {
         //         // if (!enemy.isDead) {
         //         //     this.scene.playerObject.player.play('player_jump', true);
         //         //     this.scene.playerObject.player.setVelocityY(-100);
-        //         //     playerProps.setScore = playerProps.score + 0.5; 
+        //         //     playerProps.setScore = playerProps.score + 0.5;
         //         //     updateScore(0.5);
         //         // }
         //         // enemy.isDead = true;
@@ -115,7 +105,7 @@ class Enemy {
         //         // });
         //         // return true;
         //     }
-            
+
             // console.log(enemy.body.touching)
             // enemy.isDead = true;
             // enemy.play('evil_mashroom_die', true);
@@ -125,10 +115,10 @@ class Enemy {
             //     console.log(enemy)
             //     enemy.play('evil_mashroom_die', true);
             //     enemy.on('animationcomplete', () => enemy.destroy());
-            
-    
+
+
             //     // increaseScore(.5);
-    
+
             //     // this.scene.player.sprite.setVelocity(0, -350);
             //     // this.scene.player.sprite.play('jump');
             // };
@@ -139,26 +129,76 @@ class Enemy {
     //     e.play('evil_mashroom', true);
     // }
 
-    // levelObstacleLayer() {
-    //     return 'initLayer1'
+    // getLevelLayerNames() {
+    //     return this.game.layout.layers.map(l => l.name) || []
+    //     // return 'initLayer1'
     // }
 
-    create() {}
-    
+    // // TODO real numbers are too bad
+    // getRightTileUnderEnemy(x,y, layer) {
+    //     return this.game.map.getTileAtWorldXY(x + 50, y + 64, false, null, layer);
+    // }
+    //
+    // getLeftTileUnderEnemy(x,y, layer) {
+    //     return this.game.map.getTileAtWorldXY(x - 32, y + 64, false, null, layer);
+    // }
+
     update() {
+        const layers = getLevelTiledLayerNames(this.game);
+        // const layers = getLevelTiledLayerNames(this.game);
+
+        this.enemiesData.forEach(data => {
+            const {enemyType} = data;
+            enemyType.update(layers);
+        })
+
+        // console.log(this.game.layout.layers)
+
+        // const layers = this.getLevelLayerNames();
+        //
         // for (const enemy of this.enemies.children.entries) {
+        //     console.log(enemy)
+        // }
         //     if (enemy.body.blocked.right) {
         //         enemy.direction = 'LEFT';
         //     }
-    
+        //
         //     if (enemy.body.blocked.left) {
         //         enemy.direction = 'RIGHT';
         //     }
+        //
+        //     for (let layer of layers) {
+        //
+        //     }
 
+
+
+            // for (let layer of layers) {
+            //     const tileBottomRight = this.getRightTileUnderEnemy(enemy.x, enemy.y, layer);
+            //     const tileBottomLeft = this.getLeftTileUnderEnemy(enemy.x, enemy.y, layer);
+            //
+            //     if (enemy.direction === 'RIGHT') {
+            //         if (tileBottomRight && tileBottomRight.canCollide) {
+            //             enemy.setVelocityX(50);
+            //             break;
+            //         } else {
+            //             enemy.direction = 'LEFT'
+            //             break;
+            //         }
+            //     } else {
+            //         if (tileBottomLeft && tileBottomLeft.canCollide) {
+            //             enemy.setVelocityX(-50);
+            //             break;
+            //         } else {
+            //             enemy.direction = 'RIGHT';
+            //             break;
+            //         }
+            //     }
+            // }
 
         //     const layer = this.levelObstacleLayer();
-        //     const tileRight = this.game.map.getTileAtWorldXY(enemy.x + 50, enemy.y + 64, false, null, layer);
-        //     const tileLeft = this.game.map.getTileAtWorldXY(enemy.x - 32, enemy.y + 64, false, null, layer);
+        //     const tileBottomRight = this.game.map.getTileAtWorldXY(enemy.x + 50, enemy.y + 64, false, null, layer);
+        //     const tileBottomLeft = this.game.map.getTileAtWorldXY(enemy.x - 32, enemy.y + 64, false, null, layer);
         //     if (enemy.direction === 'RIGHT') {
         //         if (tileRight && tileRight.canCollide) {
         //             enemy.setVelocityX(50);
@@ -175,11 +215,9 @@ class Enemy {
 
         //     // const tileRight = this.scene.map.getTileAtWorldXY(enemy.x + 50, enemy.y + 64, false, null, 'initLayer1');
         //     // const tileLeft = this.scene.map.getTileAtWorldXY(enemy.x - 32, enemy.y + 64, false, null, 'initLayer1');
-    
-        //     // play run animation
-        //     !enemy.isDead && this.playAliveEnemyAnimation(enemy) //enemy.play('evil_mashroom', true);
+
+            // play run animation
+            // !enemy.isDead && this.enemies.playAliveEnemyAnimation(enemy)
         // }
     }
 }
-
-export default Enemy;

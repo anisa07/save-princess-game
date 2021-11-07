@@ -23,10 +23,8 @@ export class Layout {
         this.game.map = this.game.make.tilemap({key: this.tilemap.name});
         let i = 0;
         this.layers.forEach((l) => {
-            console.log(this.assets[i].name, l.name)
             const tileset = this.game.map.addTilesetImage(this.assets[i].name, l.name);
             l.layer = this.game.map.createLayer(this.assets[i].layer, tileset, 0, 0);
-            // this.backgroundLayer1.setCollisionBetween(0, 300);
             this.game.map.setCollisionByProperty({collides: true}, true, true, this.assets[i].layer);
             i++;
         });
@@ -36,7 +34,9 @@ export class Layout {
     
     collide(actors) {
         this.layers.forEach((l) => {
-            this.game.physics.add.collider(actors, l.layer);
+            if (l.layer && l.layer.layer) {
+                this.game.physics.add.collider(actors, l.layer);
+            }
         });
     }
 }

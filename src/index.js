@@ -1,11 +1,11 @@
 import Phaser from 'phaser';
-import EvilMashroom from './EvilMashroom';
+import Enemy from './Enemy';
 import Player from './Player';
-import { GameOver } from './GameOver'
-import { Background } from './Background'
-import { LevelMap } from './LevelMap'
-import { Layout } from './Layout'
-import { CommonResources } from './CommonResources'
+import {GameOver} from './GameOver'
+import {Background} from './Background'
+import {LevelMap} from './LevelMap'
+import {Layout} from './Layout'
+import {CommonResources} from './CommonResources'
 import {playerProps} from './PlayerProps';
 
 // export const globalGameObjects = {
@@ -14,32 +14,50 @@ import {playerProps} from './PlayerProps';
 // }
 
 class InitGame extends Phaser.Scene {
-    constructor ()
-    {
-        super({ "key": "InitGame", active: 3 });
-        const resources = new CommonResources(this);
-        const background = new Background(this, '../src/assets/SET1_bakcground_night1.png');
-        this.layout = new Layout(this, 
-          {name: 'map0', path: '../src/assets/initMap0.json'}, 
-          [
-            {name: 'items', layer: 'initLayer1', path: '../src/assets/items.png'},
-            {name: 'hyptosis_til-art-batch-2', layer: 'initLayer2', path: '../src/assets/hyptosis_til-art-batch-2.png'}
-        ]);
-        const allResources = [ resources, background, this.layout ]; //, tileset,, enemies, player];
-        this.levelMap = new LevelMap(allResources);
+    constructor() {
+        super({"key": "InitGame", active: 3});
+
+        this.resources = new CommonResources(this);
+        this.background = new Background(this, '../src/assets/SET1_bakcground_night1.png');
+        // const resources = new CommonResources(this);
+        // const background = new Background(this, '../src/assets/SET1_bakcground_night1.png');
+        // this.layout = new Layout(this,
+        //     {name: 'map0', path: '../src/assets/initMap0.json'},
+        //     [
+        //         {name: 'items', layer: 'initLayer1', path: '../src/assets/items.png'},
+        //         {
+        //             name: 'hyptosis_til-art-batch-2',
+        //             layer: 'initLayer2',
+        //             path: '../src/assets/hyptosis_til-art-batch-2.png'
+        //         }
+        //     ]);
+        // const allResources = [resources, background, this.layout]; //, tileset,, enemies, player];
+        // this.levelMap = new LevelMap(allResources);
         // this.enemies = {}
         // this.player = {}
     }
 
     initialize() {
-      //Phaser.Scene.call(this, { "key": "InitGame" });
+        //Phaser.Scene.call(this, { "key": "InitGame" });
     }
 
-    preload () {
+    preload() {
+        this.layout = new Layout(this,
+            {name: 'map0', path: '../src/assets/initMap0.json'},
+            [
+                {name: 'items', layer: 'initLayer1', path: '../src/assets/items.png'},
+                {
+                    name: 'hyptosis_til-art-batch-2',
+                    layer: 'initLayer2',
+                    path: '../src/assets/hyptosis_til-art-batch-2.png'
+                }
+            ]);
+        const allResources = [this.resources, this.background, this.layout]; //, tileset,, enemies, player];
+        this.levelMap = new LevelMap(allResources);
         this.levelMap.load();
     }
-      
-    create () {
+
+    create() {
         this.levelMap.create();
 
         // this.backgroundLayer2.setCollisionByProperty({type: ['obstacle']});
@@ -47,14 +65,17 @@ class InitGame extends Phaser.Scene {
         // console.log(this.map)
 
         this.playerObject = new Player(this);
-        this.playerObject.create(30, 450);
+        this.playerObject.create(30, 450, 100);
+        this.enemy = new Enemy(this);
+        this.enemy.create(['mushrooms'])
 
-        this.enemies = new EvilMashroom(this);
+
+        // this.enemies = new EvilMushroom(this);
 
         // console.log(this.player)
 
         // console.log(this.map.getTileAtWorldXY(10, 32*16+16, false, null, 'backgroundLayer1'))
-        
+
 
         // this.game.scale.resize(this.map.widthInPixels, this.map.heightInPixels);
         // this.scale.setGameSize(this.map.widthInPixels, this.map.heightInPixels).getParentBounds();
@@ -72,7 +93,7 @@ class InitGame extends Phaser.Scene {
         //     frameRate: 10,
         //     repeat: -1
         // });
-    
+
         // this.add.sprite(32, 32, 'diamond1').play('diamond');
 
         // this.add.sprite(128, 128, 'heart1').play('heart');
@@ -98,40 +119,41 @@ class InitGame extends Phaser.Scene {
         // this.cursorKeys = this.input.keyboard.createCursorKeys()
 
         // this.eyeMonster.setBounce(0);
-        
+
         // this.eyeMonster.setCollideWorldBounds(true);
 
         // this.setPlayer(30, 32)
 
         // this.enemies = new Enemy(this) 
 
-      //   this.time.addEvent({
-      //     delay: 3000,
-      //     loop: false,
-      //     callback: () => {
-      //         this.scene.start("GameOver");
-      //     }
-      // });
+        //   this.time.addEvent({
+        //     delay: 3000,
+        //     loop: false,
+        //     callback: () => {
+        //         this.scene.start("GameOver");
+        //     }
+        // });
 
-      // this.scene.start("GameOver");
+        // this.scene.start("GameOver");
     }
 
     update() {
-      this.playerObject.update();
-      // console.log(this.map.getTileAtWorldXY(this.player.player.x, this.player.player.y+32, false, null, 'backgroundLayer1'))
+        this.playerObject.update();
+        // this.scene.restart()
+        // console.log(this.map.getTileAtWorldXY(this.player.player.x, this.player.player.y+32, false, null, 'backgroundLayer1'))
 
         //  this.movePlayerManager();\
-        
-        !playerProps.isDead && this.enemies.update();
+
+        !playerProps.playerIsDead() && this.enemy.update();
 
         if (this.playerObject.player.y > 800) {
-          playerProps.isDead = true;
-          // todo refactor
-          this.scene.restart()
+            playerProps.lives -= 1;
+            // todo refactor
+            this.scene.restart()
         }
 
-        if (playerProps.lifes <= 0) {
-          this.scene.start("GameOver");
+        if (playerProps.lives <= 0) {
+            this.scene.start("GameOver");
         }
     }
 
@@ -153,7 +175,7 @@ class InitGame extends Phaser.Scene {
     //         //   this.player.play('idle', true);
     //         // }
     //     }
-          
+
 
     //     if (this.cursorKeys.up.isDown) {
     //         this.eyeMonster.setVelocityY(-100);
@@ -182,7 +204,7 @@ const config = {
         default: "arcade",
         arcade: {
             debug: true,
-            gravity: { y: 200 }
+            gravity: {y: 200}
         }
     },
     pixelArt: true,
@@ -190,29 +212,29 @@ const config = {
         mode: Phaser.Scale.ScaleModes.NONE,
         width: window.innerWidth,
         height: window.innerHeight,
-      },
+    },
     canvasStyle: `display: block; width: 100%; height: 100%;`,
     autoFocus: true,
     callbacks: {
         postBoot: () => {
-          window.sizeChanged();
+            window.sizeChanged();
         },
-      },  
+    },
 };
 
 window.sizeChanged = () => {
     if (window.game && window.game.isBooted) {
-      setTimeout(() => {
-        window.game.scale.resize(window.innerWidth, window.innerHeight);
-  
-        window.game.canvas.setAttribute(
-          'style',
-          `display: block; width: ${window.innerWidth}px; height: ${window.innerHeight}px;`,
-        );
-      }, 100);
+        setTimeout(() => {
+            window.game.scale.resize(window.innerWidth, window.innerHeight);
+
+            window.game.canvas.setAttribute(
+                'style',
+                `display: block; width: ${window.innerWidth}px; height: ${window.innerHeight}px;`,
+            );
+        }, 100);
     }
-  };
-  
+};
+
 window.onresize = () => window.sizeChanged();
 window.game = new Phaser.Game(config);
 // window.myGame = newGame;

@@ -78,14 +78,14 @@ export default scene => {
 
     scene.anims.create({
         key: "evil_mashroom",
-        frames: scene.anims.generateFrameNumbers("evilMashroom"),
+        frames: scene.anims.generateFrameNumbers("evilMushroom"),
         frameRate: 13,
         repeat: -1
     });
 
     scene.anims.create({
         key: "evil_mashroom_die",
-        frames: scene.anims.generateFrameNumbers("evilMashroomDie"),
+        frames: scene.anims.generateFrameNumbers("evilMushroomDie"),
         frameRate: 20,
         repeat: 1
     });
