@@ -7,6 +7,7 @@ import {LevelMap} from './LevelMap'
 import {Layout} from './Layout'
 import {CommonResources} from './CommonResources'
 import {playerProps} from './PlayerProps';
+import {updateLives, updateHP, updateScore} from './gameInfo';
 
 // export const globalGameObjects = {
 //     player: {},
@@ -64,8 +65,11 @@ class InitGame extends Phaser.Scene {
         // console.log(this)
         // console.log(this.map)
 
+        playerProps.hp = 100;
+        updateHP(playerProps.hp);
         this.playerObject = new Player(this);
-        this.playerObject.create(30, 450, 100);
+        this.playerObject.create(30, 450);
+
         this.enemy = new Enemy(this);
         this.enemy.create(['mushrooms'])
 
@@ -139,6 +143,10 @@ class InitGame extends Phaser.Scene {
 
     update() {
         this.playerObject.update();
+
+        updateHP(playerProps.hp);
+        updateLives(playerProps.lives);
+        updateScore(playerProps.score);
         // this.scene.restart()
         // console.log(this.map.getTileAtWorldXY(this.player.player.x, this.player.player.y+32, false, null, 'backgroundLayer1'))
 
@@ -150,10 +158,6 @@ class InitGame extends Phaser.Scene {
             playerProps.lives -= 1;
             // todo refactor
             this.scene.restart()
-        }
-
-        if (playerProps.lives <= 0) {
-            this.scene.start("GameOver");
         }
     }
 

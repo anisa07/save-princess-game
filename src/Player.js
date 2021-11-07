@@ -1,4 +1,3 @@
-import {initiateLives} from './gameInfo';
 import {playerProps} from './PlayerProps';
 
 class Player {
@@ -7,7 +6,7 @@ class Player {
         this.player = null;
     }
 
-    create(x, y, lives) {
+    create(x, y) {
         this.cursorKeys = this.game.input.keyboard.createCursorKeys();
 
         this.player = this.game.physics.add.sprite(x, y, "player_idle");
@@ -22,14 +21,19 @@ class Player {
         this.game.cameras.main.setBounds(0, 0, this.game.map.widthInPixels, this.game.map.heightInPixels);
         this.game.cameras.main.startFollow(this.player, true, 0.09, 0.09);
         this.game.cameras.main.setZoom(1.2);
-
-        playerProps.lives = lives;
-        initiateLives(lives);
     }
 
     update() {
         if (this.player && !playerProps.playerIsDead() && this.cursorKeys) {
             this.movePlayerManager();
+        }
+
+        if (playerProps.lives <= 0) {
+            this.game.scene.start("GameOver");
+        }
+
+        if (playerProps.playerIsDead()) {
+            this.playerDies();
         }
     }
 
@@ -101,15 +105,22 @@ class Player {
     }
 
     lethalJump() {
-
+        this.player.play('player_jump', true);
+        this.player.setVelocityY(-100);
+        playerProps.score += 0.5;
     }
 
     playerGetsHit(enemyAttack) {
-        console.log('test')
+        this.player.play('player_get_hit', true);
+        playerProps.hp -= enemyAttack;
     }
 
     playerDies() {
-
+        this.player.play('player_death', true);
+        this.player.on('animationcomplete', () => {
+            playerProps.lifes -= 1;
+            this.game.scene.restart();
+        });
     }
 }
 

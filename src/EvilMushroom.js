@@ -34,20 +34,17 @@ export default class EvilMushroom {
             if(currentPlayerAnim === "player_attack" && (player.direction === 'RIGHT' && mushroomBodyTouch.left
                 || player.direction === 'LEFT' && mushroomBodyTouch.right)) {
                 console.log("player hits");
-                if(!enemy.hit) {
-                    enemy.hit = true;
-                    enemy.hp -= playerProps.attack;
-                    enemy.hit = false;
-                }
+                enemy.hp -= playerProps.attack;
             } else if (mushroomBodyTouch.up) {
                 console.log("player kills");
+                this.game.playerObject.lethalJump();
                 enemy.hp = 0;
             } else {
                 console.log("mushroom kicks");
-                this.game.playerObject.playerGetsHit()
+                this.game.playerObject.playerGetsHit(enemy.attack)
             }
 
-            if(this.isDead(enemy)){
+            if (this.isDead(enemy)){
                 this.enemyDies(enemy)
             }
         }
