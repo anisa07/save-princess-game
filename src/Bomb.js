@@ -1,4 +1,5 @@
 import {getRandomArbitrary} from "./entityPositionHelper";
+import {playerProps} from "./PlayerProps";
 
 class Bomb {
     constructor(game) {
@@ -11,7 +12,8 @@ class Bomb {
         this.bomb.attack = attack;
         this.bomb.setBounce(.6);
         this.bomb.setOrigin(0);
-        // this.bomb.setSize(32, 32);
+        this.bomb.setOffset(10, 10);
+        this.bomb.setDisplaySize(32, 32);
         this.bomb.exploded = false;
         this.bomb.direction = direction;
 
@@ -38,8 +40,11 @@ class Bomb {
         }
     }
 
-    boom() {
-        console.log('bomb hit player')
+    boom(player, bomb) {
+        if (!playerProps.playerIsDead()) {
+            this.bomb.destroy();
+            this.game.playerObject.playerGetsHit(this.bomb.attack);
+        }
     }
 }
 

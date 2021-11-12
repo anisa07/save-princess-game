@@ -39,8 +39,9 @@ export class Goblin {
         }
 
         timerId = setTimeout(() => {
+            const x = enemy.direction === 'LEFT' ? enemy.x : enemy.x + 32;
             this.bomb = new Bomb(this.game);
-            this.bomb.create(enemy.x, enemy.y, 'big_bomb', 'goblinBomb', enemy.attack, enemy.direction);
+            this.bomb.create(x, enemy.y, 'big_bomb', 'goblinBomb', enemy.attack, enemy.direction);
             this.bomb.update();
             clearTimeout(timerId);
             timerId = undefined

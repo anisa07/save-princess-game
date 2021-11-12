@@ -29,7 +29,7 @@ export class CommonResources {
         this.game.load.spritesheet('evilMushroomDie', "../src/assets/evil_mashroom_die.png", { frameWidth: 50, frameHeight: 50})
 
         this.game.load.spritesheet('hopHopGoblin', '../src/assets/Goblin.png', {frameWidth: 150, frameHeight: 150})
-        this.game.load.spritesheet('bigBomb', '../src/assets/Bomb.png', {frameWidth: 100, frameHeight: 100})
+        this.game.load.spritesheet('bigBomb', '../src/assets/Bomb.png', {frameWidth: 50, frameHeight: 50})
     }
     create() {
         this.game.anims.create({
