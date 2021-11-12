@@ -11,6 +11,7 @@ class Player {
 
         this.player = this.game.physics.add.sprite(x, y, "player_idle");
         this.player.name = 'player';
+        this.player.looseLife = false;
         this.player.direction = 'RIGHT';
         this.player.setPushable(false);
         this.player.setDepth(1)
@@ -32,7 +33,7 @@ class Player {
             this.game.scene.start("GameOver");
         }
 
-        if (playerProps.playerIsDead()) {
+        if (playerProps.playerIsDead() && !this.player.looseLife) {
             this.playerDies();
         }
     }
@@ -117,8 +118,9 @@ class Player {
 
     playerDies() {
         this.player.play('player_death', true);
+        this.player.looseLife = true;
         this.player.on('animationcomplete', () => {
-            playerProps.lifes -= 1;
+            playerProps.lives -= 1;
             this.game.scene.restart();
         });
     }

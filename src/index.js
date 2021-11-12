@@ -42,7 +42,7 @@ class InitGame extends Phaser.Scene {
         this.playerObject.create(30, 450);
 
         this.enemy = new Enemy(this);
-        this.enemy.create(['mushrooms'])
+        this.enemy.create(['mushrooms', 'goblins'])
     }
 
     update() {

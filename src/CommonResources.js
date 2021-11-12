@@ -27,6 +27,9 @@ export class CommonResources {
 
         this.game.load.spritesheet('evilMushroom', "../src/assets/evil_mashroom.png", { frameWidth: 60, frameHeight: 65})
         this.game.load.spritesheet('evilMushroomDie', "../src/assets/evil_mashroom_die.png", { frameWidth: 50, frameHeight: 50})
+
+        this.game.load.spritesheet('hopHopGoblin', '../src/assets/Goblin.png', {frameWidth: 150, frameHeight: 150})
+        this.game.load.spritesheet('bigBomb', '../src/assets/Bomb.png', {frameWidth: 100, frameHeight: 100})
     }
     create() {
         this.game.anims.create({
@@ -117,6 +120,20 @@ export class CommonResources {
             key: "evil_mashroom_die",
             frames: this.game.anims.generateFrameNumbers("evilMushroomDie"),
             frameRate: 20,
+            repeat: 1
+        });
+
+        this.game.anims.create({
+            key: "hop_hop_goblin",
+            frames: this.game.anims.generateFrameNumbers("hopHopGoblin"),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.game.anims.create({
+            key: "big_bomb",
+            frames: this.game.anims.generateFrameNumbers("bigBomb"),
+            frameRate: 10,
             repeat: 1
         });
     }

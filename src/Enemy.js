@@ -1,5 +1,6 @@
 import EvilMushroom from "./EvilMushroom";
 import {getLevelTiledLayerNames} from "./entityPositionHelper";
+import {Goblin} from "./Goblin";
 
 export default class Enemy {
     constructor(game) {
@@ -20,6 +21,12 @@ export default class Enemy {
                         enemyObjects: this.game.map.getObjectLayer('mushrooms').objects || []
                     });
                     break;
+                case 'goblins':
+                    this.enemiesData.push({
+                        enemyType: new Goblin(this.game),
+                        enemyPic: 'hopHopGoblin',
+                        enemyObjects: this.game.map.getObjectLayer('goblins').objects || []
+                    })
             }
         });
 

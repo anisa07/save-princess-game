@@ -10,3 +10,7 @@ export const getLeftTileUnderEnemy = (enemy, game, layer) =>
 export const getLevelTiledLayerNames = (game) => {
     return game.layout.layers.map(l => (l.layer.layer || {name: ""}).name) || []
 }
+
+export const getRandomArbitrary = (min, max) => {
+    return Math.random() * (max - min) + min;
+}
