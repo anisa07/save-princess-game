@@ -41,7 +41,7 @@ class Bomb {
     }
 
     boom(player, bomb) {
-        if (!playerProps.playerIsDead()) {
+        if (!playerProps.playerIsDead() && bomb.name === this.bomb.name) {
             this.bomb.destroy();
             this.game.playerObject.playerGetsHit(this.bomb.attack);
         }

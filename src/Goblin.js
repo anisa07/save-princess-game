@@ -1,8 +1,10 @@
 import Bomb from './Bomb';
+import {playerProps} from "./PlayerProps";
+import {isDead} from "./enemyHelper";
 
 let timerId;
 
-export class Goblin {
+export default class Goblin {
     constructor(game) {
         this.game = game;
         this.bomb = null;
@@ -16,17 +18,12 @@ export class Goblin {
                 enemy.hp = 100;
                 enemy.setBounce(.1);
                 enemy.setOrigin(0);
-                enemy.setSize(32, 50);
+                enemy.setSize(40, 50);
+                enemy.setDepth(1)
                 enemy.setCollideWorldBounds(true);
                 enemy.name = 'hopHopGoblin'
             }
         }
-
-        this.game.physics.add.collider(this.game.playerObject.player, this.game.enemy.enemies, this.fight, null, this);
-    }
-
-    isDead(e) {
-        return e.hp < 1;
     }
 
     playAliveEnemyAnimation(e) {
@@ -39,7 +36,7 @@ export class Goblin {
         }
 
         timerId = setTimeout(() => {
-            const x = enemy.direction === 'LEFT' ? enemy.x : enemy.x + 32;
+            const x = enemy.direction === 'LEFT' ? enemy.x : enemy.x + 100;
             this.bomb = new Bomb(this.game);
             this.bomb.create(x, enemy.y, 'big_bomb', 'goblinBomb', enemy.attack, enemy.direction);
             this.bomb.update();
@@ -59,12 +56,26 @@ export class Goblin {
                     enemy.flipX = false;
                     enemy.direction = 'RIGHT';
                 }
-                this.throughBomb(enemy);
-                !this.isDead(enemy) && this.playAliveEnemyAnimation(enemy)
+                // this.throughBomb(enemy);
+                !isDead(enemy) && this.playAliveEnemyAnimation(enemy)
             }
         }
     }
 
-    fight() {
+    fight(player, enemy) {
+        const currentPlayerAnim = player.anims.currentAnim.key;
+        const goblinBodyTouch = enemy.body.touching;
+        // TODO fix touch
+        console.log(goblinBodyTouch)
+        if(currentPlayerAnim === "player_attack") {
+            enemy.hp -= playerProps.attack;
+        } else if (goblinBodyTouch.up) {
+            this.game.playerObject.lethalJump();
+            enemy.hp = 0;
+        }
+
+        if (isDead(enemy)){
+            enemy.destroy();
+        }
     }
 }

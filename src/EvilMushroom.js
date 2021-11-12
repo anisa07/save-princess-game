@@ -1,5 +1,6 @@
 import {getLeftTileUnderEnemy, getRightTileUnderEnemy} from "./entityPositionHelper";
 import {playerProps} from './PlayerProps';
+import {isDead} from "./enemyHelper";
 
 export default class EvilMushroom {
     constructor(game) {
@@ -20,33 +21,25 @@ export default class EvilMushroom {
                 enemy.name = 'evilMushroom'
             }
         }
-
-        this.game.physics.add.collider(this.game.playerObject.player, this.game.enemy.enemies, this.fight, null, this);
     }
 
     fight(player, enemy) {
-        if (!this.isDead(enemy) && !playerProps.playerIsDead()) {
-            const currentPlayerAnim = player.anims.currentAnim.key;
-            const mushroomBodyTouch = enemy.body.touching;
+        const currentPlayerAnim = player.anims.currentAnim.key;
+        const mushroomBodyTouch = enemy.body.touching;
 
-            if(currentPlayerAnim === "player_attack" && (player.direction === 'RIGHT' && mushroomBodyTouch.left
-                || player.direction === 'LEFT' && mushroomBodyTouch.right)) {
-                enemy.hp -= playerProps.attack;
-            } else if (mushroomBodyTouch.up) {
-                this.game.playerObject.lethalJump();
-                enemy.hp = 0;
-            } else {
-                this.game.playerObject.playerGetsHit(enemy.attack)
-            }
-
-            if (this.isDead(enemy)){
-                this.enemyDies(enemy)
-            }
+        if(currentPlayerAnim === "player_attack" && (player.direction === 'RIGHT' && mushroomBodyTouch.left
+            || player.direction === 'LEFT' && mushroomBodyTouch.right)) {
+            enemy.hp -= playerProps.attack;
+        } else if (mushroomBodyTouch.up) {
+            this.game.playerObject.lethalJump();
+            enemy.hp = 0;
+        } else {
+            this.game.playerObject.playerGetsHit(enemy.attack)
         }
-    }
 
-    isDead(e) {
-        return e.hp < 1;
+        if (isDead(enemy)){
+            this.enemyDies(enemy)
+        }
     }
 
     playAliveEnemyAnimation(e) {
@@ -90,7 +83,7 @@ export default class EvilMushroom {
                     }
                 }
 
-                !this.isDead(enemy) && this.playAliveEnemyAnimation(enemy)
+                !isDead(enemy) && this.playAliveEnemyAnimation(enemy)
             }
         }
     }
