@@ -56,7 +56,7 @@ export default class Goblin {
                     enemy.flipX = false;
                     enemy.direction = 'RIGHT';
                 }
-                // this.throughBomb(enemy);
+                this.throughBomb(enemy);
                 !isDead(enemy) && this.playAliveEnemyAnimation(enemy)
             }
         }
@@ -65,8 +65,6 @@ export default class Goblin {
     fight(player, enemy) {
         const currentPlayerAnim = player.anims.currentAnim.key;
         const goblinBodyTouch = enemy.body.touching;
-        // TODO fix touch
-        console.log(goblinBodyTouch)
         if(currentPlayerAnim === "player_attack") {
             enemy.hp -= playerProps.attack;
         } else if (goblinBodyTouch.up) {

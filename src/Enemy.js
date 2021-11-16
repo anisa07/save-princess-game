@@ -41,7 +41,7 @@ export default class Enemy {
             enemyType.create()
         })
 
-        this.game.layout.collide(this.enemies);
+        this.game.collide(this.enemies);
 
         this.game.physics.add.collider(this.game.playerObject.player, this.enemies, this.fight, null, this);
     }

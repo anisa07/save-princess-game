@@ -17,7 +17,7 @@ class Player {
         this.player.setDepth(1)
         this.player.setCollideWorldBounds(true);
         
-        this.game.layout.collide(this.player);
+        this.game.collide(this.player);
 
         this.game.cameras.main.setBounds(0, 0, this.game.map.widthInPixels, this.game.map.heightInPixels);
         this.game.cameras.main.startFollow(this.player, true, 0.09, 0.09);
