@@ -8,7 +8,7 @@ export default class EvilMushroom {
     }
 
     create() {
-        for (const enemy of this.game.enemy.enemies.children.entries) {
+        for (const enemy of this.game.enemies.enemies.children.entries) {
             if (enemy.texture.key === 'evilMushroom') {
                 enemy.setPushable(false);
                 enemy.direction = 'LEFT';
@@ -54,7 +54,7 @@ export default class EvilMushroom {
     }
     
     update(layers) {
-        for (const enemy of this.game.enemy.enemies.children.entries) {
+        for (const enemy of this.game.enemies.enemies.children.entries) {
             if (enemy.name === 'evilMushroom') {
                 if (enemy.body.blocked.right) {
                     enemy.direction = 'LEFT';
