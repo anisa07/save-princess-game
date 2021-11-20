@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import Enemy from './Enemy';
+import Enemies from './Enemies';
 import Player from './Player';
 import {GameOver} from './GameOver'
 import {Background} from './Background'
@@ -36,8 +36,8 @@ class InitGame extends Phaser.Scene {
         this.playerObject = new Player(this);
         this.playerObject.create(30, 450);
 
-        this.enemy = new Enemy(this);
-        this.enemy.create(['mushrooms', 'goblins'])
+        this.enemies = new Enemies(this);
+        this.enemies.create(['mushrooms', 'goblins'])
     }
 
     collide(actors) {
@@ -55,7 +55,7 @@ class InitGame extends Phaser.Scene {
         updateLives(playerProps.lives);
         updateScore(playerProps.score);
 
-        !playerProps.playerIsDead() && this.enemy.update();
+        !playerProps.playerIsDead() && this.enemies.update();
 
         if (this.playerObject.player.y > 800) {
             playerProps.lives -= 1;

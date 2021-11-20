@@ -11,7 +11,7 @@ export default class Goblin {
     }
 
     create() {
-        for (const enemy of this.game.enemy.enemies.children.entries) {
+        for (const enemy of this.game.enemies.enemies.children.entries) {
             if (enemy.texture.key === 'hopHopGoblin') {
                 enemy.setPushable(false);
                 enemy.attack = 50;
@@ -46,7 +46,7 @@ export default class Goblin {
     }
 
     update() {
-        for (const enemy of this.game.enemy.enemies.children.entries) {
+        for (const enemy of this.game.enemies.enemies.children.entries) {
             if (enemy.name === 'hopHopGoblin') {
                 const player = this.game.playerObject.player;
                 if (player.x <= enemy.x) {
