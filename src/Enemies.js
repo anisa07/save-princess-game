@@ -32,6 +32,10 @@ export default class Enemies {
         }
     }
 
+    getEnemies(name) {
+        return  this.enemies.children.entries.filter((e) => e.texture.key === name);
+    }
+
     fight(player, enemy) {
         if (isDead(enemy) || playerProps.playerIsDead())
             return;

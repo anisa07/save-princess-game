@@ -1,33 +1,16 @@
 import Bomb from './Bomb';
 import {playerProps} from "./PlayerProps";
 import {isDead} from "./enemyHelper";
+import Enemy from "./Enemy";
 
 let timerId;
 
-export default class Goblin {
+export default class Goblin extends Enemy {
     constructor(game) {
+        super(game, 'hopHopGoblin', 'hop_hop_goblin','evil_mashroom_die',
+        {attack: 50, hp: 250, size: {x: 40, y: 50}});
         this.game = game;
         this.bomb = null;
-    }
-
-    create() {
-        for (const enemy of this.game.enemies.enemies.children.entries) {
-            if (enemy.texture.key === 'hopHopGoblin') {
-                enemy.setPushable(false);
-                enemy.attack = 50;
-                enemy.hp = 100;
-                enemy.setBounce(.1);
-                enemy.setOrigin(0);
-                enemy.setSize(40, 50);
-                enemy.setDepth(1)
-                enemy.setCollideWorldBounds(true);
-                enemy.name = 'hopHopGoblin'
-            }
-        }
-    }
-
-    playAliveEnemyAnimation(e) {
-        e.play('hop_hop_goblin', true)
     }
 
     throughBomb(enemy) {
@@ -46,18 +29,19 @@ export default class Goblin {
     }
 
     update() {
-        for (const enemy of this.game.enemies.enemies.children.entries) {
-            if (enemy.name === 'hopHopGoblin') {
-                const player = this.game.playerObject.player;
-                if (player.x <= enemy.x) {
-                    enemy.flipX = true;
-                    enemy.direction = 'LEFT';
-                } else {
-                    enemy.flipX = false;
-                    enemy.direction = 'RIGHT';
-                }
-                this.throughBomb(enemy);
-                !isDead(enemy) && this.playAliveEnemyAnimation(enemy)
+        for (const enemy of this.getEnemies()) {
+            const player = this.game.playerObject.player;
+            if (player.x <= enemy.x) {
+                enemy.flipX = true;
+                enemy.direction = 'LEFT';
+            } else {
+                enemy.flipX = false;
+                enemy.direction = 'RIGHT';
+            }
+            this.throughBomb(enemy);
+
+            if (!isDead(enemy)) {
+                this.playAliveEnemyAnimation(enemy)
             }
         }
     }
