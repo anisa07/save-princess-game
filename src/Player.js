@@ -1,5 +1,6 @@
 import {playerProps} from './PlayerProps';
 
+let hitTimer;
 class Player {
     constructor(game) {
         this.game = game;
@@ -112,6 +113,11 @@ class Player {
     }
 
     playerGetsHit(enemyAttack) {
+        this.player.alpha = 0.5;
+        hitTimer = setTimeout(() => {
+            this.player.alpha = 1;
+            clearTimeout(hitTimer);
+        }, 500)
         this.player.play('player_get_hit', true);
         playerProps.hp -= enemyAttack;
     }

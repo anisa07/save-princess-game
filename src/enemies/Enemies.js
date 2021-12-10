@@ -1,5 +1,5 @@
 import {getLevelTiledLayerNames} from "./entityPositionHelper";
-import {playerProps} from "./PlayerProps";
+import {playerProps} from "../PlayerProps";
 import {isDead, getEnemyData} from "./enemyHelper";
 
 export default class Enemies {

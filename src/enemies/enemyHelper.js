@@ -1,5 +1,6 @@
 import EvilMushroom from "./EvilMushroom";
 import Goblin from "./Goblin";
+import Owl from "./Owl";
 
 export const isDead = (e) =>  {
     return e.hp < 1;
@@ -19,5 +20,11 @@ export const getEnemyData = (name, game) => {
                 enemyPic: 'hopHopGoblin',
                 enemyObjects: game.map.getObjectLayer('goblins').objects || []
             };
+        case 'owls':
+            return {
+                enemyType: new Owl(game),
+                enemyPic: 'owl',
+                enemyObjects: game.map.getObjectLayer('owls').objects || []
+            }
     }
 }

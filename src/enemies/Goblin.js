@@ -1,5 +1,5 @@
 import Bomb from './Bomb';
-import {playerProps} from "./PlayerProps";
+import {playerProps} from "../PlayerProps";
 import {isDead} from "./enemyHelper";
 import Enemy from "./Enemy";
 
@@ -30,14 +30,7 @@ export default class Goblin extends Enemy {
 
     update() {
         for (const enemy of this.getEnemies()) {
-            const player = this.game.playerObject.player;
-            if (player.x <= enemy.x) {
-                enemy.flipX = true;
-                enemy.direction = 'LEFT';
-            } else {
-                enemy.flipX = false;
-                enemy.direction = 'RIGHT';
-            }
+            this.turnToThePlayer(enemy);
             this.throughBomb(enemy);
 
             if (!isDead(enemy)) {

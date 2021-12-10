@@ -29,6 +29,11 @@ export class CommonResources {
 
         game.load.spritesheet('hopHopGoblin', '../src/assets/Goblin.png', {frameWidth: 150, frameHeight: 150})
         game.load.spritesheet('bigBomb', '../src/assets/Bomb.png', {frameWidth: 50, frameHeight: 50})
+
+        game.load.spritesheet('owlAttack', '../src/assets/enemies/owlAttack.png', {frameWidth: 32, frameHeight: 32});
+        game.load.spritesheet('owl', '../src/assets/enemies/owlFly.png', {frameWidth: 32, frameHeight: 32});
+        game.load.spritesheet('owlHit', '../src/assets/enemies/owlHit.png', {frameWidth: 32, frameHeight: 32});
+        game.load.spritesheet('evilEnergy', '../src/assets/enemies/evilEnergy.png', {frameWidth: 32, frameHeight: 32})
     }
 
     create(game) {
@@ -136,5 +141,34 @@ export class CommonResources {
             frameRate: 10,
             repeat: 1
         });
+
+        game.anims.create({
+            key: "owl_fly",
+            frames: game.anims.generateFrameNumbers("owl"),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        game.anims.create({
+            key: "owl_attack",
+            frames: game.anims.generateFrameNumbers("owlAttack"),
+            frameRate: 12,
+            repeat: -1
+        });
+
+        game.anims.create({
+            key: "owl_get_hit",
+            frames: game.anims.generateFrameNumbers("owlHit"),
+            frameRate: 6,
+            repeat: 1
+        });
+
+        game.anims.create({
+            key: "evil_energy",
+            frames: game.anims.generateFrameNumbers("evilEnergy"),
+            frameRate: 9,
+            repeat: 1
+        });
+
     }
 }

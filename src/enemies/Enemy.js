@@ -1,5 +1,5 @@
 import {isOnTheGround, noGroundOnLeft, noGroundOnRight} from "./entityPositionHelper";
-import {playerProps} from './PlayerProps';
+import {playerProps} from '../PlayerProps';
 import {isDead} from "./enemyHelper";
 
 
@@ -17,11 +17,9 @@ export default class Enemy {
         this.hp = op.hp || defaultProperties.hp;
         this.direction = op.direction || defaultProperties.direction;
         if (op.size) {
-            this.sizex = op.size.x || defaultProperties.size.x;
-            this.sizey = op.size.y || defaultProperties.size.y;
+            this.size = op.size || defaultProperties.size;
         } else {
-            this.sizex = defaultProperties.size.x;
-            this.sizey = defaultProperties.size.y;
+            this.size = defaultProperties.size;
         }
         this.bounce = op.bounce || defaultProperties.bounce;
         this.origin = op.origin || defaultProperties.origin;
@@ -35,17 +33,22 @@ export default class Enemy {
 
     create() {
         for (const enemy of this.getEnemies()) {
-            enemy.setPushable(false);
-            enemy.direction = this.direction;
-            enemy.attack = this.attack;
-            enemy.hp = this.hp;
-            enemy.setBounce(this.bounce);
-            enemy.setOrigin(this.origin);
-            enemy.setSize(this.sizex, this.sizey);
-            enemy.setCollideWorldBounds(this.collideWorld);
-            enemy.name = this.name;
+            this.createEnemy(enemy);
         }
     }
+
+    createEnemy(enemy) {
+        enemy.setPushable(false);
+        enemy.direction = this.direction;
+        enemy.attack = this.attack;
+        enemy.hp = this.hp;
+        enemy.setBounce(this.bounce);
+        enemy.setOrigin(this.origin);
+        enemy.setSize(this.size.x, this.size.y);
+        enemy.setCollideWorldBounds(this.collideWorld);
+        enemy.name = this.name;
+    }
+
 
     fight(player, enemy) {
         const playerAnim = player.anims.currentAnim.key;
@@ -98,10 +101,11 @@ export default class Enemy {
                     this.turnRight(enemy)
                     break;
                 }
+            }
 
-                if (!enemy.velocity) {
-                    enemy.setVelocityX(enemy.direction === 'LEFT' ? -50 : 50);
-                }
+            if (!enemy.velocity) {
+                const directionFactor = enemy.direction === 'LEFT' ? -1 : 1;
+                enemy.setVelocityX(this.velocity * directionFactor);
             }
 
             if (!isDead(enemy)) {
@@ -116,13 +120,22 @@ export default class Enemy {
 
     turnLeft(enemy) {
         enemy.direction = 'LEFT';
-        enemy.setVelocityX(-50);
         enemy.flipX = true;
     }
 
     turnRight(enemy) {
         enemy.direction = 'RIGHT';
-        enemy.setVelocityX(50);
         enemy.flipX = false;
+    }
+
+    turnToThePlayer(enemy) {
+        const player = this.game.playerObject.player;
+        if (player.x <= enemy.x) {
+            enemy.flipX = true;
+            enemy.direction = 'LEFT';
+        } else {
+            enemy.flipX = false;
+            enemy.direction = 'RIGHT';
+        }
     }
 }

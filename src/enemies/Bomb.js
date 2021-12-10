@@ -1,5 +1,5 @@
 import {getRandomArbitrary} from "./entityPositionHelper";
-import {playerProps} from "./PlayerProps";
+import {playerProps} from "../PlayerProps";
 
 class Bomb {
     constructor(game) {

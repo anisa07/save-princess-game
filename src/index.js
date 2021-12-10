@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import Enemies from './Enemies';
+import Enemies from './enemies/Enemies';
 import Player from './Player';
 import {GameOver} from './GameOver'
 import {Background} from './Background'
@@ -37,7 +37,7 @@ class InitGame extends Phaser.Scene {
         this.playerObject.create(30, 450);
 
         this.enemies = new Enemies(this);
-        this.enemies.create(['mushrooms', 'goblins'])
+        this.enemies.create(['mushrooms', 'goblins', 'owls'])
     }
 
     collide(actors) {
