@@ -3,16 +3,19 @@ import {playerProps} from '../PlayerProps';
 import {isDead} from "./enemyHelper";
 
 
+const defaultDieAnimation = { src: 'evil_mushroom_die.png', frameWidth: 50, frameHeight: 50, frameRate: 20 };
+const defaultProjectileAnimation = { src: 'throw_sword.png', frameWidth: 50, frameHeight: 50, frameRate: 20 };
+
 const defaultProperties = { attack: 25, hp: 100, direction: 'LEFT', size: {x: 32, y: 50},
-    bounce: .1, origin: 0, collideWorld: true, velocity: 50};
+    bounce: .1, origin: 0, collideWorld: true, velocity: 50, hitOnTouch: true,
+    dieAnimation: defaultDieAnimation, projectileAnimation: defaultProjectileAnimation };
 
 export default class Enemy {
-
-    constructor(game, name, animation, dieAnimation, optionalProperties = defaultProperties) {
+    constructor(game, name, animation, optionalProperties = defaultProperties) {
         this.game = game;
         this.name = name;
         this.animation = animation;
-        this.dieAnimation = dieAnimation;
+        this.animation.name = name;
         const op = optionalProperties;
         this.attack = op.attack || defaultProperties.attack;
         this.hp = op.hp || defaultProperties.hp;
@@ -26,6 +29,17 @@ export default class Enemy {
         this.origin = op.origin || defaultProperties.origin;
         this.collideWorld = op.collideWorld === undefined ? defaultProperties.collideWorld : op.collideWorld;
         this.velocity = op.velocity || defaultProperties.velocity;
+        this.hitOnTouch = op.hitOnTouch || defaultProperties.hitOnTouch;
+
+        if (op.dieAnimation) {
+            this.dieAnimation = op.dieAnimation;
+            this.dieAnimation.name = name + '_die';
+        }
+
+        if (op.projectileAnimation) {
+            this.projectileAnimation = op.projectileAnimation;
+            this.projectileAnimation.name = name + '_projectile';
+        }
     }
 
     getEnemies() {
@@ -62,7 +76,9 @@ export default class Enemy {
             this.game.playerObject.lethalJump();
             enemy.hp = 0;
         } else {
-            this.game.playerObject.playerGetsHit(enemy.attack)
+            if (this.hitOnTouch) {
+                this.game.playerObject.playerGetsHit(enemy.attack);
+            }
         }
 
         if (isDead(enemy)){
@@ -71,14 +87,23 @@ export default class Enemy {
     }
 
     playAliveEnemyAnimation(e) {
-        e.play(this.animation, true);
+        e.play(this.animation.name, true);
     }
 
     enemyDies(e) {
-        e.play(this.dieAnimation, true);
-        e.on('animationcomplete', () => e.destroy());
+        if (this.dieAnimation) {
+            e.play(this.dieAnimation.name, true);
+            e.on('animationcomplete', () => e.destroy());
+        }
     }
-    
+
+    shoot(e) {
+        if (this.projectileAnimation) {
+            e.play(this.dieAnimation.name, true);
+            e.on('animationcomplete', () => e.destroy());
+        }
+    }
+
     update(layers) {
         for (const enemy of this.getEnemies()) {
             this.updateEnemy(enemy, layers);
@@ -158,12 +183,33 @@ export default class Enemy {
 
 
     loadResources() {
+        this.game.load.spritesheet(this.animation.name, '../src/assets/enemies/' + this.animation.src,
+            {frameWidth: this.animation.frameWidth, frameHeight: this.animation.frameHeight});
+        if (this.dieAnimation) {
+            this.game.load.spritesheet(this.dieAnimation.name, '../src/assets/enemies/' + this.dieAnimation.src,
+                {frameWidth: this.dieAnimation.frameWidth, frameHeight: this.dieAnimation.frameHeight});
+        }
     }
 
     createResources() {
+        this.game.anims.create({
+            key: this.animation.name,
+            frames: this.game.anims.generateFrameNumbers(this.animation.name),
+            frameRate: this.animation.frameRate,
+            repeat: -1
+        });
+
+        if (this.dieAnimation) {
+            this.game.anims.create({
+                key: this.dieAnimation.name,
+                frames: this.game.anims.generateFrameNumbers(this.dieAnimation.name),
+                frameRate: this.dieAnimation.frameRate,
+                repeat: 1
+            });
+        }
     }
 
-    getObjectLayer(name) {
-        return this.game.map.getObjectLayer(name).objects || [];
+    getObjectLayer(layer) {
+        return this.game.map.getObjectLayer(layer).objects || [];
     }
 }

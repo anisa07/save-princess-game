@@ -7,25 +7,21 @@ let timerId;
 
 export default class Goblin extends Enemy {
     constructor(game) {
-        super(game, 'hopHopGoblin', 'hop_hop_goblin','evil_mushroom_die',
-        {attack: 50, hp: 250, size: {x: 40, y: 50}});
-        this.game = game;
+        super(game, 'hopHopGoblin',
+            { src: 'Goblin.png', frameWidth: 150, frameHeight: 150, frameRate: 10 },
+            undefined,
+        {attack: 50, hp: 250, size: {x: 40, y: 50}, hitOnTouch: false}
+        );
         this.bomb = null;
     }
 
     loadResources() {
-        this.game.load.spritesheet('hopHopGoblin', '../src/assets/enemies/Goblin.png', {frameWidth: 150, frameHeight: 150})
+        super.loadResources();
         this.game.load.spritesheet('bigBomb', '../src/assets/enemies/Bomb.png', {frameWidth: 50, frameHeight: 50})
     }
 
     createResources() {
-        this.game.anims.create({
-            key: "hop_hop_goblin",
-            frames: this.game.anims.generateFrameNumbers("hopHopGoblin"),
-            frameRate: 10,
-            repeat: -1
-        });
-
+        super.createResources();
         this.game.anims.create({
             key: "big_bomb",
             frames: this.game.anims.generateFrameNumbers("bigBomb"),
@@ -38,21 +34,6 @@ export default class Goblin extends Enemy {
         this.turnToThePlayer(enemy);
         this.throughBomb(enemy);
         this.whileAlive(enemy)
-    }
-
-    fight(player, enemy) {
-        const currentPlayerAnim = player.anims.currentAnim.key;
-        const goblinBodyTouch = enemy.body.touching;
-        if(currentPlayerAnim === "player_attack") {
-            enemy.hp -= playerProps.attack;
-        } else if (goblinBodyTouch.up) {
-            this.game.playerObject.lethalJump();
-            enemy.hp = 0;
-        }
-
-        if (isDead(enemy)){
-            enemy.destroy();
-        }
     }
 
     throughBomb(enemy) {

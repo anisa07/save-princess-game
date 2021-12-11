@@ -9,28 +9,22 @@ const timers = {
 
 export default class Owl extends Enemy {
     constructor(game) {
-        super(game, 'owl', 'owl_fly','evil_mushroom_die', {
-            direction: 'RIGHT'
-            }
-        )
-        this.game = game;
+        super(game, 'owl',
+            { src: 'owlFly.png', frameWidth: 32, frameHeight: 32, frameRate: 10 },
+            undefined,
+            { direction: 'RIGHT', hitOnTouch: false }
+        );
     }
 
     loadResources() {
+        super.loadResources();
         this.game.load.spritesheet('owlAttack', '../src/assets/enemies/owlAttack.png', {frameWidth: 32, frameHeight: 32});
-        this.game.load.spritesheet('owl', '../src/assets/enemies/owlFly.png', {frameWidth: 32, frameHeight: 32});
         this.game.load.spritesheet('owlHit', '../src/assets/enemies/owlHit.png', {frameWidth: 32, frameHeight: 32});
         this.game.load.spritesheet('evilEnergy', '../src/assets/enemies/evilEnergy.png', {frameWidth: 32, frameHeight: 32});
     }
 
     createResources() {
-        this.game.anims.create({
-            key: "owl_fly",
-            frames: this.game.anims.generateFrameNumbers("owl"),
-            frameRate: 10,
-            repeat: -1
-        });
-
+        super.createResources();
         this.game.anims.create({
             key: "owl_attack",
             frames: this.game.anims.generateFrameNumbers("owlAttack"),
@@ -59,23 +53,6 @@ export default class Owl extends Enemy {
         this.setVelocity(enemy);
         this.throwEnergy(enemy);
         this.whileAlive(enemy);
-    }
-
-    fight(player, enemy) {
-        const currentPlayerAnim = player.anims.currentAnim.key;
-        const owlBodyTouch = enemy.body.touching;
-
-        if(currentPlayerAnim === "player_attack") {
-            this.owlGetHit(enemy)
-            enemy.hp -= playerProps.attack;
-        } else if (owlBodyTouch.up) {
-            this.game.playerObject.lethalJump();
-            enemy.hp = 0;
-        }
-
-        if (isDead(enemy)){
-            enemy.destroy();
-        }
     }
 
     owlGetHit(e) {

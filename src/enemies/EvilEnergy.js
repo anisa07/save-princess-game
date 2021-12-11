@@ -4,7 +4,6 @@ import Bomb from "./Bomb";
 class EvilEnergy extends Bomb {
     constructor(game) {
         super(game)
-        this.game = game;
     }
 
     create(x, y, key, name, attack, direction) {
@@ -29,11 +28,7 @@ class EvilEnergy extends Bomb {
     }
 
     boom(player, bomb) {
-        super.boom(player, bomb)
-        // if (!playerProps.playerIsDead() && bomb.name === this.bomb.name) {
-        //     this.bomb.destroy();
-        //     this.game.playerObject.playerGetsHit(this.bomb.attack);
-        // }
+        super.boom(player, bomb);
     }
 }
 
