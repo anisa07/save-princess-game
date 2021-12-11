@@ -12,16 +12,18 @@ import {updateLives, updateHP, updateScore} from './gameInfo';
 class InitGame extends Phaser.Scene {
     constructor() {
         super({"key": "InitGame", active: 3});
-        const resources = new CommonResources();
-        const background = new Background('../src/assets/SET1_bakcground_night1.png');
-        const layout = new Layout(
-            {name: 'map0', path: '../src/assets/initMap0.json'},
+        // const resources = new CommonResources(this);
+        const background = new Background(this, '../src/assets/map/SET1_bakcground_night1.png');
+        const layout = new Layout(this,
+            {name: 'map0', path: '../src/assets/map/initMap0.json'},
             [
-                { name: 'items', layer: 'initLayer1', path: '../src/assets/items.png' },
-                { name: 'hyptosis_til-art-batch-2', layer: 'initLayer2', path: '../src/assets/hyptosis_til-art-batch-2.png' }
+                { name: 'items', layer: 'initLayer1', path: '../src/assets/map/items.png' },
+                { name: 'hyptosis_til-art-batch-2', layer: 'initLayer2', path: '../src/assets/map/hyptosis_til-art-batch-2.png' }
             ]);
-        this.allResources = [ resources, background, layout ]; //, tileset,, enemies, player];
-        this.levelMap = new LevelMap(this, this.allResources);
+        this.enemies = new Enemies(this, ['mushrooms', 'goblins', 'owls', 'skeletons']);
+        this.playerObject = new Player(this);
+        this.allResources = [ background, layout, this.enemies, this.playerObject ]; //, tileset,, enemies, player];
+        this.levelMap = new LevelMap(this.allResources);
     }
 
     preload() {
@@ -33,11 +35,6 @@ class InitGame extends Phaser.Scene {
 
         playerProps.hp = 100;
         updateHP(playerProps.hp);
-        this.playerObject = new Player(this);
-        this.playerObject.create(30, 450);
-
-        this.enemies = new Enemies(this);
-        this.enemies.create(['mushrooms', 'goblins', 'owls'])
     }
 
     collide(actors) {

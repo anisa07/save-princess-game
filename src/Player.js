@@ -7,7 +7,70 @@ class Player {
         this.player = null;
     }
 
-    create(x, y) {
+    load() {
+        this.game.load.spritesheet('playerIdle', "../src/assets/player/PlayerIdle.png", { frameWidth: 45, frameHeight: 45});
+        this.game.load.spritesheet('playerRun', "../src/assets/player/PlayerRun.png", { frameWidth: 45, frameHeight: 45});
+        this.game.load.spritesheet('playerJump', "../src/assets/player/PlayerJump.png", { frameWidth: 45, frameHeight: 45});
+        this.game.load.spritesheet('playerFall', "../src/assets/player/PlayerFall.png", { frameWidth: 45, frameHeight: 45});
+        this.game.load.spritesheet('playerAttack', "../src/assets/player/PlayerAttack1.png", { frameWidth: 120, frameHeight: 65});
+        this.game.load.spritesheet('playerDeath', "../src/assets/player/PlayerDeath.png", { frameWidth: 45, frameHeight: 45});
+        this.game.load.spritesheet('playerGetHit', "../src/assets/player/PlayerGetHit.png", { frameWidth: 45, frameHeight: 45});
+    }
+
+    create() {
+        this.game.anims.create({
+            key: "player_idle",
+            frames: this.game.anims.generateFrameNumbers("playerIdle"),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.game.anims.create({
+            key: "player_run",
+            frames: this.game.anims.generateFrameNumbers("playerRun"),
+            frameRate: 6,
+            repeat: -1
+        });
+
+        this.game.anims.create({
+            key: "player_jump",
+            frames: this.game.anims.generateFrameNumbers("playerJump"),
+            frameRate: 4,
+            repeat: -1
+        });
+
+        this.game.anims.create({
+            key: "player_fall",
+            frames: this.game.anims.generateFrameNumbers("playerFall"),
+            frameRate: 4,
+            repeat: -1
+        });
+
+        this.game.anims.create({
+            key: "player_attack",
+            frames: this.game.anims.generateFrameNumbers("playerAttack"),
+            frameRate: 6,
+            repeat: -1
+        });
+
+        this.game.anims.create({
+            key: "player_death",
+            frames: this.game.anims.generateFrameNumbers("playerDeath"),
+            frameRate: 9,
+            repeat: 1
+        });
+
+        this.game.anims.create({
+            key: "player_get_hit",
+            frames: this.game.anims.generateFrameNumbers("playerGetHit"),
+            frameRate: 3,
+            repeat: 1
+        });
+        this.placeOnMap(30, 450);
+        this.game.enemies.setCollideToPlayer();
+    }
+
+    placeOnMap(x, y) {
         this.cursorKeys = this.game.input.keyboard.createCursorKeys();
 
         this.player = this.game.physics.add.sprite(x, y, "player_idle");

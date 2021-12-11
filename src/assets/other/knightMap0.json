@@ -378,11 +378,11 @@
         {
          "columns":1,
          "firstgid":2523,
-         "image":"evil_mashroom.png",
+         "image":"evil_mushroom.png",
          "imageheight":715,
          "imagewidth":60,
          "margin":0,
-         "name":"evil_mashroom",
+         "name":"evil_mushroom",
          "spacing":0,
          "tilecount":11,
          "tileheight":65,

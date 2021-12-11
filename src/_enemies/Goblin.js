@@ -7,25 +7,21 @@ let timerId;
 
 export default class Goblin extends Enemy {
     constructor(game) {
-        super(game, 'hopHopGoblin', 'hop_hop_goblin','evil_mushroom_die',
-        {attack: 50, hp: 250, size: {x: 40, y: 50}});
-        this.game = game;
+        super(game, 'hopHopGoblin',
+            { src: 'Goblin.png', frameWidth: 150, frameHeight: 150, frameRate: 10 },
+            { src: 'evil_mushroom_die.png', frameWidth: 50, frameHeight: 50, frameRate: 20 },
+        {attack: 50, hp: 250, size: {x: 40, y: 50}}
+        );
         this.bomb = null;
     }
 
     loadResources() {
-        this.game.load.spritesheet('hopHopGoblin', '../src/assets/enemies/Goblin.png', {frameWidth: 150, frameHeight: 150})
+        super.loadResources();
         this.game.load.spritesheet('bigBomb', '../src/assets/enemies/Bomb.png', {frameWidth: 50, frameHeight: 50})
     }
 
     createResources() {
-        this.game.anims.create({
-            key: "hop_hop_goblin",
-            frames: this.game.anims.generateFrameNumbers("hopHopGoblin"),
-            frameRate: 10,
-            repeat: -1
-        });
-
+        super.createResources();
         this.game.anims.create({
             key: "big_bomb",
             frames: this.game.anims.generateFrameNumbers("bigBomb"),

@@ -1,12 +1,11 @@
 export class LevelMap {
-    constructor(game, resources) {
-        this.game = game;
+    constructor(resources) {
         this.resources = resources;
     }
     load() {
-        this.resources.forEach(r => r.load(this.game));
+        this.resources.forEach(r => r.load());
     }
     create() {
-        this.resources.forEach(r => r.create(this.game));
+        this.resources.forEach(r => r.create());
     }
 }
