@@ -1,14 +1,13 @@
 import {playerProps} from "../PlayerProps";
 
 export class Shot {
-    constructor(game, position, attack, direction, params) {
+    constructor(game, name, position, attack, direction, params) {
         this.game = game;
-        this.shot = this.game.physics.add.sprite(position.x, position.y - 30, name);
+        this.shot = this.game.physics.add.sprite(position.x, position.y, name);
         this.shot.name = params.name;
         this.shot.attack = attack;
         this.shot.setBounce(.6);
         this.shot.setOrigin(0);
-        this.shot.setOffset(40, 40);
         this.shot.setDisplaySize(32, 32);
         this.shot.exploded = false;
         this.shot.direction = direction;

@@ -1,16 +1,16 @@
 import {isOnTheGround, noGroundOnLeft, noGroundOnRight} from "../entityPositionHelper";
 import {playerProps} from '../PlayerProps';
 import {isDead} from "./enemyHelper";
-import EvilEnergy from "./EvilEnergy";
 import {Shot} from "./Shot";
 
 
 const defaultDieAnimation = { src: 'evil_mushroom_die.png', frameWidth: 50, frameHeight: 50, frameRate: 20 };
 const defaultShotAnimation = { src: 'thrown_sword.png', frameWidth: 50, frameHeight: 50, frameRate: 20 };
 
-const defaultProperties = { attack: 25, hp: 100, direction: 'LEFT', size: {x: 32, y: 50},
-    bounce: .1, origin: 0, collideWorld: true, velocity: 50, hitOnTouch: true,
-    dieAnimation: defaultDieAnimation, shotAnimation: defaultShotAnimation };
+const defaultProperties = { attack: 25, hp: 100, direction: 'LEFT', movement: 'walk', size: {x: 32, y: 50},
+    bounce: .1, origin: 0, collideWorld: true, velocity: 50, hitOnTouch: true, followPlayer: false,
+    dieAnimation: defaultDieAnimation, shotAnimation: defaultShotAnimation
+};
 
 export default class Enemy {
     constructor(game, name, animation, optionalProperties = defaultProperties) {
@@ -22,6 +22,7 @@ export default class Enemy {
         this.attack = op.attack || defaultProperties.attack;
         this.hp = op.hp || defaultProperties.hp;
         this.direction = op.direction || defaultProperties.direction;
+        this.movement = op.movement || defaultProperties.movement;
         if (op.size) {
             this.size = op.size || defaultProperties.size;
         } else {
@@ -32,6 +33,7 @@ export default class Enemy {
         this.collideWorld = op.collideWorld === undefined ? defaultProperties.collideWorld : op.collideWorld;
         this.velocity = op.velocity || defaultProperties.velocity;
         this.hitOnTouch = op.hitOnTouch !== undefined ? op.hitOnTouch : defaultProperties.hitOnTouch;
+        this.followPlayer = op.followPlayer !== undefined ? op.followPlayer : defaultProperties.followPlayer;
 
         if (op.dieAnimation) {
             this.dieAnimation = op.dieAnimation;
@@ -107,12 +109,26 @@ export default class Enemy {
         }
 
         this.timers[key] = setTimeout(() => {
-            this.turnToThePlayer(enemy);
-            this.shot = new Shot(this.game, enemy, enemy.attack, enemy.direction, this.shotAnimation);
+            if (this.followPlayer) {
+                this.turnToThePlayer(enemy);
+            }
+            const offset = this.getShotOffset(this.shotAnimation.startShot);
+            this.shot = new Shot(this.game, this.shotAnimation.name, { x: enemy.x + offset.x, y: enemy.y + offset.y }, enemy.attack, enemy.direction, this.shotAnimation);
             this.shot.update();
             clearTimeout(this.timers[key]);
             this.timers[key] = undefined
         }, this.shotAnimation.timeout);
+    }
+
+    getShotOffset(startShot) {
+        switch (startShot) {
+            case 'top':
+                return {x: this.size.x / 2, y: -this.size.y /2 };
+            case 'middle':
+                return {x: this.size.x / 2, y: 0 };
+            case 'bottom':
+                return {x: this.size.x / 2, y: this.size.y /2 };
+        }
     }
 
     update(layers) {
@@ -122,12 +138,28 @@ export default class Enemy {
     }
 
     updateEnemy(enemy, layers) {
-        this.changeDirectionWhileBlocked(enemy);
-        this.changeDirectionWhileOnEdge(enemy, layers);
-        this.setVelocity(enemy);
+        this.move(this.movement, enemy, layers);
         this.whileAlive(enemy);
         if (this.shotAnimation) {
             this.shoot(enemy);
+        }
+    }
+
+    move(movement, enemy, layers) {
+        switch (movement) {
+            case 'walk':
+                this.changeDirectionWhileBlocked(enemy);
+                this.setVelocity(enemy);
+                this.changeDirectionWhileOnEdge(enemy, layers);
+                break;
+            case 'fly':
+                enemy.body.allowGravity = false;
+                this.changeDirectionWhileBlocked(enemy);
+                this.setVelocity(enemy);
+                break;
+            case 'on_hold':
+                this.turnToThePlayer(enemy);
+                break;
         }
     }
 
@@ -186,7 +218,7 @@ export default class Enemy {
 
     turnToThePlayer(enemy) {
         const player = this.game.playerObject.player;
-        if (player.x <= enemy.x) {
+        if (player.x <= enemy.x + this.size.x * 1.5) {
             enemy.flipX = true;
             enemy.direction = 'LEFT';
         } else {

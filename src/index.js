@@ -20,7 +20,11 @@ class InitGame extends Phaser.Scene {
                 { name: 'items', layer: 'initLayer1', path: '../src/assets/map/items.png' },
                 { name: 'hyptosis_til-art-batch-2', layer: 'initLayer2', path: '../src/assets/map/hyptosis_til-art-batch-2.png' }
             ]);
-        this.enemies = new Enemies(this, ['mushrooms', 'goblins', 'owls', 'skeletons']);
+        this.enemies = new Enemies(this, [
+            'mushrooms',
+            'goblins',
+            'owls',
+            'skeletons']);
         this.playerObject = new Player(this);
         this.allResources = [ background, layout, this.enemies, this.playerObject ]; //, tileset,, enemies, player];
         this.levelMap = new LevelMap(this.allResources);
