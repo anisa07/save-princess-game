@@ -9,8 +9,7 @@ export default class Goblin extends Enemy {
     constructor(game) {
         super(game, 'hopHopGoblin',
             { src: 'Goblin.png', frameWidth: 150, frameHeight: 150, frameRate: 10 },
-            undefined,
-        {attack: 50, hp: 250, size: {x: 40, y: 50}, hitOnTouch: false}
+            {attack: 50, hp: 250, size: {x: 40, y: 50}, hitOnTouch: false}
         );
         this.bomb = null;
     }

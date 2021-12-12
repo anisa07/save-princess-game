@@ -11,7 +11,6 @@ export default class Owl extends Enemy {
     constructor(game) {
         super(game, 'owl',
             { src: 'owlFly.png', frameWidth: 32, frameHeight: 32, frameRate: 10 },
-            undefined,
             { direction: 'RIGHT', hitOnTouch: false }
         );
     }
